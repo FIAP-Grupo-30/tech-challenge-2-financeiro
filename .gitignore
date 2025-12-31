@@ -1,0 +1,18 @@
+# tech-challenge-2-financeiro .gitignore
+node_modules/
+dist/
+build/
+.vite/
+.env
+npm-debug.log*
+yarn-error.log*
+
+# caches
+.parcel-cache/
+
+# IDE
+.idea/
+*.iml
+
+# macOS
+.DS_Store

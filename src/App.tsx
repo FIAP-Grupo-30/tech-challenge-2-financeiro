@@ -1,54 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import TransactionList from './components/TransactionList';
+import React from 'react';
 
 const App: React.FC = () => {
-  const [accountId, setAccountId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAccount = async () => {
-      try {
-        const token = localStorage.getItem('bytebank_token');
-        if (!token) { setIsLoading(false); return; }
-
-        const res = await fetch('http://localhost:3000/account', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        setAccountId(data.result?.account?.[0]?.id || null);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchAccount();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#47A138]"></div>
-      </div>
-    );
-  }
-
-  if (!accountId) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="bg-white rounded-xl p-8 text-center">
-          <p className="text-gray-600 mb-4">Faça login para acessar.</p>
-          <a href="/" className="btn-bytebank-primary">Voltar</a>
+  return (
+    <div style={{ 
+      minHeight: 'calc(100vh - 64px)', 
+      backgroundColor: '#f5f5f5',
+      padding: '48px 24px'
+    }}>
+      <div style={{ 
+        maxWidth: '800px', 
+        margin: '0 auto',
+        backgroundColor: 'white',
+        borderRadius: '16px',
+        padding: '48px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '80px',
+            height: '80px',
+            backgroundColor: '#47A138',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 24px',
+            fontSize: '40px'
+          }}>
+            💰
+          </div>
+          <h1 style={{ 
+            fontSize: '2rem', 
+            fontWeight: '700', 
+            color: '#000',
+            marginBottom: '16px'
+          }}>
+            Hello World - Financeiro
+          </h1>
+          <p style={{ 
+            fontSize: '1.125rem', 
+            color: '#666',
+            marginBottom: '32px'
+          }}>
+            Micro-frontend Financeiro carregado com sucesso! 🎉
+          </p>
+          <div style={{
+            backgroundColor: '#eff6ff',
+            border: '2px dashed #3b82f6',
+            borderRadius: '12px',
+            padding: '32px',
+            marginTop: '24px'
+          }}>
+            <h2 style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '600', 
+              color: '#1e40af',
+              marginBottom: '12px'
+            }}>
+              📋 Área de Desenvolvimento
+            </h2>
+            <p style={{ color: '#1d4ed8', marginBottom: '16px' }}>
+              Aqui devem ficar os <strong>Lançamentos Financeiros</strong> e <strong>Extrato</strong>:
+            </p>
+            <ul style={{ 
+              textAlign: 'left', 
+              color: '#1e40af',
+              maxWidth: '400px',
+              margin: '0 auto',
+              lineHeight: '2'
+            }}>
+              <li>💸 PIX - Transferências instantâneas</li>
+              <li>📄 DOC - Transferências bancárias</li>
+              <li>🏧 Saque - Retirada de valores</li>
+              <li>📋 Extrato - Histórico de transações</li>
+            </ul>
+          </div>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <TransactionList accountId={accountId} />
-      </main>
     </div>
   );
 };
