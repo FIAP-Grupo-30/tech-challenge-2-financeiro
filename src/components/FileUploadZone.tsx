@@ -76,9 +76,9 @@ export default function FileUploadZone() {
   };
 
   return (
-    <div className="w-full max-w-md p-6 bg-white rounded-2xl shadow-lg border border-gray-100">
+    <div className="w-full p-6 bg-white rounded-2xl shadow-lg border border-gray-100">
       <h3 className="text-xl font-bold mb-1 text-gray-800 flex items-center gap-2">
-        <FileText className="text-blue-500" size={24} />
+        <FileText className="text-green-500" size={24} />
         Recibos e Documentos
       </h3>
       <p className="text-sm text-gray-500 mb-6">Anexe comprovantes à sua transação.</p>
@@ -95,7 +95,7 @@ export default function FileUploadZone() {
         onClick={() => fileInputRef.current?.click()}
         className={`
           relative border-2 border-dashed rounded-xl p-8 transition-all cursor-pointer text-center
-          ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-blue-300 hover:bg-gray-50"}
+          ${isDragging ? "border-green-500 bg-green-50" : "border-gray-200 hover:border-green-300 hover:bg-gray-50"}
         `}
       >
         <input
@@ -108,11 +108,11 @@ export default function FileUploadZone() {
         />
         
         <div className="flex flex-col items-center">
-          <div className="p-3 bg-blue-100 rounded-full mb-3">
-            <Upload className="text-blue-600" size={28} />
+          <div className="p-3 bg-green-100 rounded-full mb-3">
+            <Upload className="text-green-600" size={28} />
           </div>
           <p className="text-sm font-medium text-gray-700">
-            Arraste arquivos ou <span className="text-blue-600 underline">clique para subir</span>
+            Arraste arquivos ou <span className="text-green-600 underline">clique para subir</span>
           </p>
           <p className="text-xs text-gray-400 mt-2">PDF, PNG ou JPG (Máx. 5MB por arquivo)</p>
         </div>
@@ -152,7 +152,7 @@ export default function FileUploadZone() {
             disabled={isUploading}
             className={`
               w-full py-3 rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2
-              ${isUploading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 active:scale-[0.98] shadow-md shadow-blue-200"}
+              ${isUploading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700 active:scale-[0.98] shadow-md shadow-blue-200"}
             `}
           >
             {isUploading ? (
