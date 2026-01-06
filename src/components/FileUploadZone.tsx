@@ -76,7 +76,7 @@ export default function FileUploadZone() {
   };
 
   return (
-    <div className="w-full p-6 bg-white rounded-2xl shadow-lg border border-gray-100">
+    <div className="w-full p-6 bg-white rounded-2xl shadow-md border border-gray-100">
       <h3 className="text-xl font-bold mb-1 text-gray-800 flex items-center gap-2">
         <FileText className="text-green-500" size={24} />
         Recibos e Documentos
