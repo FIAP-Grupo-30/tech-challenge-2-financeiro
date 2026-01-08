@@ -36,7 +36,8 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
       setIsLoading(true);
       try {
         const token = localStorage.getItem('bytebank_token');
-        const res = await fetch(`http://localhost:3000/account/${accountId}/statement`, {
+        const apiBase = (window as any).__BYTEBANK_API_BASE__ || 'http://localhost:3000';
+        const res = await fetch(`${apiBase}/account/${accountId}/statement`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

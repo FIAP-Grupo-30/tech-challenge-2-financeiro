@@ -1,3 +1,35 @@
+# ByteBank - Financeiro (Microfrontend)
+
+Responsabilidade
+- Gerenciar transações do usuário: listar, filtrar, criar e importar transações via upload.
+- Fornecer UI para visualização de extratos e histórico financeiro.
+- Comunicar-se com o backend usando a base `window.__BYTEBANK_API_BASE__` (evita hardcoded URLs).
+
+Pontos importantes após ajustes recentes
+- O MFE utiliza `createDomGetter` do pacote `@bytebank/shared` para montar seu conteúdo dentro do shell (`@bytebank/base`).
+- Removemos estilos globais `min-h-screen` deste MFE para evitar conflitos com o layout do shell.
+- As chamadas API devem usar `window.__BYTEBANK_API_BASE__ || 'http://localhost:3000'` como base.
+
+Como executar
+```bash
+cd tech-challenge-2-financeiro
+npm install
+npm run dev
+```
+
+Build e Preview
+```bash
+npm run build
+npm run preview -- --port 9002
+```
+
+Arquivos relevantes
+- `src/bytebank-financeiro.tsx` - entry single-spa e domElementGetter
+- `src/components/TransactionList.tsx` - lista de transações
+- `src/components/FileUploadZone.tsx` - zona de upload de extratos
+
+Observações
+- Se o importmap do `root-config` apontar para outras portas, atualize `dev-tools/active-urls.txt` ou `window.__BYTEBANK_IMPORTMAP__` em runtime.
 # Financeiro - Módulo de Transações ByteBank
 
 ## 📋 Visão Geral
