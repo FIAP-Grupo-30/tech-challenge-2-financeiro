@@ -1,17 +1,6 @@
 import type React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { ENV } from '../config/env';
-
-interface Transaction {
-  id: string;
-  type: 'Credit' | 'Debit';
-  value: number;
-  date: string;
-  description?: string;
-  category?: string;
-  from?: string;
-  to?: string;
-}
+import { useMemo, useState } from 'react';
+import { useGetTransactions } from '../hooks/useGetTransactions';
 
 const CATEGORIES = [
   { value: 'all', label: 'Todas' },
@@ -27,34 +16,12 @@ interface Props {
 }
 
 const TransactionList: React.FC<Props> = ({ accountId }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ type: 'all', category: 'all', searchTerm: '' });
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      setIsLoading(true);
-      try {
-        const token = localStorage.getItem('bytebank_token');
-        const res = await fetch(`${ENV.API_BASE_URL}/account/${accountId}/statement`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        setTransactions(data.result?.transactions || []);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    if (accountId) fetchTransactions();
-
-    const handleUpdate = () => fetchTransactions();
-    window.addEventListener('bytebank-event', handleUpdate as any);
-    return () => window.removeEventListener('bytebank-event', handleUpdate as any);
-  }, [accountId]);
+  const { data, isPending } = useGetTransactions({ accountId });
+  const transactions = data?.result?.transactions || [];
 
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
@@ -76,7 +43,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
   const formatDate = (d: string) => new Date(d).toLocaleDateString('pt-BR');
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#47A138]"></div>
@@ -100,6 +67,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`px-4 py-2 rounded-md border ${showFilters ? 'bg-[#47A138] text-white' : 'border-gray-300'}`}
+              type="button"
             >
               Filtros
             </button>
@@ -131,6 +99,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
             <button
               onClick={() => setFilters({ type: 'all', category: 'all', searchTerm: '' })}
               className="text-[#47A138]"
+              type="button"
             >
               Limpar
             </button>
@@ -173,6 +142,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             className="px-4 py-2 border rounded-md disabled:opacity-50"
+            type="button"
           >
             Anterior
           </button>
@@ -183,6 +153,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             className="px-4 py-2 border rounded-md disabled:opacity-50"
+            type="button"
           >
             Próximo
           </button>
