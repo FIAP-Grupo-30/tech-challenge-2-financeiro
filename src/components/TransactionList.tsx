@@ -20,7 +20,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ type: 'all', category: 'all', searchTerm: '' });
 
-  const { data, isPending } = useGetTransactions({ accountId });
+  const { data, isFetching } = useGetTransactions({ accountId });
   const transactions = data?.result?.transactions || [];
 
   const filtered = useMemo(() => {
@@ -43,7 +43,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
   const formatDate = (d: string) => new Date(d).toLocaleDateString('pt-BR');
 
-  if (isPending) {
+  if (isFetching) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#47A138]"></div>

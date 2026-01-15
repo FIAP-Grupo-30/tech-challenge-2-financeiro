@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import FileUploadZone from './components/FileUploadZone';
 import TransactionList from './components/TransactionList';
 
@@ -35,6 +36,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Content />
+      <ReactQueryDevtoolsPanel />
     </QueryClientProvider>
   );
 }
