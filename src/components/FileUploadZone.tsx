@@ -1,5 +1,5 @@
 import { CheckCircle, FileText, Loader2, Upload, X } from 'lucide-react';
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ENV } from '../config/env';
 
 // Configurações de validação

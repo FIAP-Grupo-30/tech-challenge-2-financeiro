@@ -1,5 +1,5 @@
-import TransactionList from './components/TransactionList';
 import FileUploadZone from './components/FileUploadZone';
+import TransactionList from './components/TransactionList';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         </div>
 
         <div>
-          <TransactionList />
+          <TransactionList accountId="1234567890" />
         </div>
       </div>
     </main>
