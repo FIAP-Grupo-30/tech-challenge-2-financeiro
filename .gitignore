@@ -7,9 +7,6 @@ build/
 npm-debug.log*
 yarn-error.log*
 
-# caches
-.parcel-cache/
-
 # IDE
 .idea/
 *.iml

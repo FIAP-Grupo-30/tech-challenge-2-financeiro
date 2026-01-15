@@ -1,15 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-
-interface Transaction {
-  id: string;
-  type: 'Credit' | 'Debit';
-  value: number;
-  date: string;
-  description?: string;
-  category?: string;
-  from?: string;
-  to?: string;
-}
+import type React from 'react';
+import { useMemo, useState } from 'react';
+import { useGetTransactions } from '../hooks/useGetTransactions';
 
 const CATEGORIES = [
   { value: 'all', label: 'Todas' },
@@ -25,41 +16,22 @@ interface Props {
 }
 
 const TransactionList: React.FC<Props> = ({ accountId }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ type: 'all', category: 'all', searchTerm: '' });
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      setIsLoading(true);
-      try {
-        const token = localStorage.getItem('bytebank_token');
-        const apiBase = (window as any).__BYTEBANK_API_BASE__ || 'https://tech-challenge-2-production.up.railway.app';
-        const res = await fetch(`${apiBase}/account/${accountId}/statement`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        setTransactions(data.result?.transactions || []);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    if (accountId) fetchTransactions();
-
-    const handleUpdate = () => fetchTransactions();
-    window.addEventListener('bytebank-event', handleUpdate as any);
-    return () => window.removeEventListener('bytebank-event', handleUpdate as any);
-  }, [accountId]);
+  const { data, isFetching } = useGetTransactions({ accountId });
+  const transactions = data?.result?.transactions || [];
 
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
       if (filters.type !== 'all' && t.type !== filters.type) return false;
       if (filters.category !== 'all' && t.category !== filters.category) return false;
-      if (filters.searchTerm && !t.description?.toLowerCase().includes(filters.searchTerm.toLowerCase())) return false;
+      if (
+        filters.searchTerm &&
+        !t.description?.toLowerCase().includes(filters.searchTerm.toLowerCase())
+      )
+        return false;
       return true;
     });
   }, [transactions, filters]);
@@ -67,10 +39,11 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
   const paged = filtered.slice((currentPage - 1) * 10, currentPage * 10);
   const totalPages = Math.ceil(filtered.length / 10);
 
-  const formatCurrency = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+  const formatCurrency = (v: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
   const formatDate = (d: string) => new Date(d).toLocaleDateString('pt-BR');
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#47A138]"></div>
@@ -94,6 +67,7 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`px-4 py-2 rounded-md border ${showFilters ? 'bg-[#47A138] text-white' : 'border-gray-300'}`}
+              type="button"
             >
               Filtros
             </button>
@@ -116,9 +90,17 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
               onChange={(e) => setFilters({ ...filters, category: e.target.value })}
               className="px-3 py-2 border border-gray-300 rounded-md"
             >
-              {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+              {CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
             </select>
-            <button onClick={() => setFilters({ type: 'all', category: 'all', searchTerm: '' })} className="text-[#47A138]">
+            <button
+              onClick={() => setFilters({ type: 'all', category: 'all', searchTerm: '' })}
+              className="text-[#47A138]"
+              type="button"
+            >
               Limpar
             </button>
           </div>
@@ -130,16 +112,24 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
           <div className="bg-white rounded-xl p-8 text-center text-gray-500">Nenhuma transação</div>
         ) : (
           paged.map((t) => (
-            <div key={t.id} className={`transaction-item ${t.type === 'Credit' ? 'transaction-item-credit' : 'transaction-item-debit'}`}>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${t.type === 'Credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+            <div
+              key={t.id}
+              className={`transaction-item ${t.type === 'Credit' ? 'transaction-item-credit' : 'transaction-item-debit'}`}
+            >
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${t.type === 'Credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
+              >
                 {t.type === 'Credit' ? '↓' : '↑'}
               </div>
               <div className="flex-1">
                 <p className="font-medium text-black">{t.description || 'Transação'}</p>
                 <p className="text-sm text-gray-500">{formatDate(t.date)}</p>
               </div>
-              <span className={`font-semibold ${t.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}>
-                {t.type === 'Credit' ? '+' : ''}{formatCurrency(t.value)}
+              <span
+                className={`font-semibold ${t.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}
+              >
+                {t.type === 'Credit' ? '+' : ''}
+                {formatCurrency(t.value)}
               </span>
             </div>
           ))
@@ -148,11 +138,23 @@ const TransactionList: React.FC<Props> = ({ accountId }) => {
 
       {totalPages > 1 && (
         <div className="flex justify-center gap-2">
-          <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-4 py-2 border rounded-md disabled:opacity-50">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 border rounded-md disabled:opacity-50"
+            type="button"
+          >
             Anterior
           </button>
-          <span className="px-4 py-2">{currentPage} / {totalPages}</span>
-          <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-4 py-2 border rounded-md disabled:opacity-50">
+          <span className="px-4 py-2">
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 border rounded-md disabled:opacity-50"
+            type="button"
+          >
             Próximo
           </button>
         </div>
