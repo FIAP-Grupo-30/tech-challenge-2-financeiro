@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useCallback } from "react";
-import { Upload, FileText, X, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import React, { useState, useRef, useCallback } from 'react';
+import { Upload, FileText, X, CheckCircle, Loader2 } from 'lucide-react';
+import { ENV } from '../config/env';
 
 // Configurações de validação
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "application/pdf"];
-const EVENT_NAME = "mfe:document-added";
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
+const EVENT_NAME = 'mfe:document-added';
 
 export default function FileUploadZone() {
   const [files, setFiles] = useState<File[]>([]);
@@ -41,12 +42,11 @@ export default function FileUploadZone() {
 
     setIsUploading(true);
     const formData = new FormData();
-    files.forEach((file) => formData.append("documents", file));
+    files.forEach((file) => formData.append('documents', file));
 
     try {
-      // Nota: Substitua pela sua URL real ou variável de ambiente (ex: import.meta.env.VITE_API_URL)
-      const response = await fetch("https://sua-api.com/upload", {
-        method: "POST",
+      const response = await fetch(`${ENV.API_BASE_URL}/upload`, {
+        method: 'POST',
         body: formData,
       });
 
@@ -58,14 +58,14 @@ export default function FileUploadZone() {
           })
         );
 
-        alert("Documentos enviados com sucesso!");
+        alert('Documentos enviados com sucesso!');
         setFiles([]); // Limpa a lista
       } else {
-        throw new Error("Falha no servidor");
+        throw new Error('Falha no servidor');
       }
     } catch (error) {
-      console.error("Erro no upload:", error);
-      alert("Erro ao enviar arquivos. Tente novamente.");
+      console.error('Erro no upload:', error);
+      alert('Erro ao enviar arquivos. Tente novamente.');
     } finally {
       setIsUploading(false);
     }
@@ -85,7 +85,10 @@ export default function FileUploadZone() {
 
       {/* Dropzone */}
       <div
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={(e) => {
           e.preventDefault();
@@ -95,7 +98,7 @@ export default function FileUploadZone() {
         onClick={() => fileInputRef.current?.click()}
         className={`
           relative border-2 border-dashed rounded-xl p-8 transition-all cursor-pointer text-center
-          ${isDragging ? "border-green-500 bg-green-50" : "border-gray-200 hover:border-green-300 hover:bg-gray-50"}
+          ${isDragging ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300 hover:bg-gray-50'}
         `}
       >
         <input
@@ -104,9 +107,9 @@ export default function FileUploadZone() {
           hidden
           ref={fileInputRef}
           onChange={(e) => handleFiles(e.target.files)}
-          accept={ALLOWED_TYPES.join(",")}
+          accept={ALLOWED_TYPES.join(',')}
         />
-        
+
         <div className="flex flex-col items-center">
           <div className="p-3 bg-green-100 rounded-full mb-3">
             <Upload className="text-green-600" size={28} />
@@ -126,19 +129,24 @@ export default function FileUploadZone() {
           </p>
           <ul className="max-h-40 overflow-y-auto pr-2 custom-scrollbar">
             {files.map((file, index) => (
-              <li 
-                key={`${file.name}-${index}`} 
+              <li
+                key={`${file.name}-${index}`}
                 className="flex items-center justify-between p-3 bg-gray-50 rounded-lg group animate-in fade-in slide-in-from-bottom-2"
               >
                 <div className="flex items-center gap-3 truncate">
                   <CheckCircle size={18} className="text-green-500 shrink-0" />
                   <div className="flex flex-col truncate">
                     <span className="text-sm font-medium text-gray-700 truncate">{file.name}</span>
-                    <span className="text-[10px] text-gray-400">{(file.size / 1024).toFixed(0)} KB</span>
+                    <span className="text-[10px] text-gray-400">
+                      {(file.size / 1024).toFixed(0)} KB
+                    </span>
                   </div>
                 </div>
                 <button
-                  onClick={(e) => { e.stopPropagation(); removeFile(index); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(index);
+                  }}
                   className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                 >
                   <X size={18} />
@@ -152,7 +160,7 @@ export default function FileUploadZone() {
             disabled={isUploading}
             className={`
               w-full py-3 rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2
-              ${isUploading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700 active:scale-[0.98] shadow-md shadow-blue-200"}
+              ${isUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 active:scale-[0.98] shadow-md shadow-blue-200'}
             `}
           >
             {isUploading ? (

@@ -8,10 +8,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
     federation({
-      name: '@bytebank/dashboard',
+      name: '@bytebank/financeiro',
       filename: 'remoteEntry.js',
       exposes: {
-        './bytebank-dashboard': './src/exposes/bytebank-dashboard.tsx',
+        './bytebank-financeiro': './src/bytebank-financeiro.tsx',
       },
       shared: ['react', 'react-dom', 'react-router-dom'],
     }),
@@ -23,11 +23,9 @@ export default defineConfig({
     cssCodeSplit: false,
   },
   server: {
-    port: 9003,
-    cors: true,
+    port: 9002,
   },
   preview: {
-    port: 9003,
-    cors: true,
+    port: 9002,
   },
 });
