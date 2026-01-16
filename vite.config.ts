@@ -24,6 +24,13 @@ export default defineConfig({
   },
   server: {
     port: 9002,
+    proxy: {
+      '/api': {
+        target: 'https://tech-challenge-2-production.up.railway.app',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
   preview: {
     port: 9002,
