@@ -8,10 +8,9 @@ const transactionSchema = z.object({
   type: z.enum(['Credit', 'Debit']),
   value: z.number(),
   date: z.string(),
-  description: z.string().optional(),
-  category: z.string().optional(),
   from: z.string().optional(),
   to: z.string().optional(),
+  anexo: z.string().optional(),
 });
 
 export type Transaction = z.infer<typeof transactionSchema>;
@@ -28,7 +27,7 @@ export type Response = z.infer<typeof responseSchema>;
 async function fetcher(accountId: string) {
   const response = await fetch(`${ENV.API_BASE_URL}/account/${accountId}/statement`, {
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkRvdWdsYXMgR29tZXMiLCJlbWFpbCI6ImRvdWdsYXNAbWFpbC5jb20iLCJwYXNzd29yZCI6IjEyMzQ1IiwiaWQiOiI2OTY5Nzk0MDZhOGUyYjliODYzYWI5MjciLCJpYXQiOjE3Njg1MjAwMDcsImV4cCI6MTc2ODU2MzIwN30.RWE24Hg2yl8uOdUdDML8wlYAo3iIOwDWH-gDqLxcQWA`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicGFzc3dvcmQiOiJzdHJpbmciLCJpZCI6IjY5Njk5N2YwZjc0MjhkOTY3NTA0NTUyYyIsImlhdCI6MTc2ODUyNzg3MiwiZXhwIjoxNzY4NTcxMDcyfQ.90ueBmfq0FMsJc-o7dEvuNhvyUumIRxcseMvXTlvfO0`,
     },
   });
 
