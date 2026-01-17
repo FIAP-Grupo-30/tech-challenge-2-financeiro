@@ -1,6 +1,6 @@
 import { Edit2 } from 'lucide-react';
 import type React from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGetTransactions } from '../hooks/useGetTransactions';
 
 interface Props {
@@ -8,8 +8,10 @@ interface Props {
   onEdit?: (transaction: any) => void;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [displayedCount, setDisplayedCount] = useState(ITEMS_PER_PAGE);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ 
     type: 'all', 
@@ -17,6 +19,7 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
     startDate: '',
     endDate: ''
   });
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   const { data, isFetching } = useGetTransactions({ accountId });
   const transactions = data?.result?.transactions || [];
@@ -45,8 +48,34 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
     });
   }, [transactions, filters]);
 
-  const paged = filtered.slice((currentPage - 1) * 10, currentPage * 10);
-  const totalPages = Math.ceil(filtered.length / 10);
+  const displayedTransactions = filtered.slice(0, displayedCount);
+  const hasMore = displayedCount < filtered.length;
+
+  useEffect(() => {
+    setDisplayedCount(ITEMS_PER_PAGE);
+  }, [filters]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetching) {
+          setDisplayedCount((prev) => prev + ITEMS_PER_PAGE);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [hasMore, isFetching]);
 
   const formatCurrency = (v: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -112,90 +141,82 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
         )}
       </div>
 
-      <div className="space-y-3">
-        {paged.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 text-center text-gray-500">Nenhuma transação</div>
-        ) : (
-          paged.map((t) => {
-            const hasAttachment = t.anexo && t.anexo.length > 0;
-            
-            return (
-              <div
-                key={t.id}
-                className={`transaction-item ${t.type === 'Credit' ? 'transaction-item-credit' : 'transaction-item-debit'}`}
-              >
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${t.type === 'Credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
-                >
-                  {t.type === 'Credit' ? '↓' : '↑'}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium text-black">
-                      {t.type === 'Credit' ? 'Receita' : 'Despesa'}
-                      {hasAttachment && (
-                        <span className="ml-2 text-xs text-gray-500" title="Possui anexo">
-                          📎
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                  <p className="text-sm text-gray-500">{formatDate(t.date)}</p>
-                  {(t.from || t.to) && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      {t.from && `De: ${t.from}`}
-                      {t.from && t.to && ' • '}
-                      {t.to && `Para: ${t.to}`}
-                    </p>
-                  )}
-                </div>
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`font-semibold ${t.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="max-h-[600px] overflow-y-auto">
+          <div className="p-3 space-y-3">
+            {displayedTransactions.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">Nenhuma transação</div>
+            ) : (
+              displayedTransactions.map((t) => {
+                const hasAttachment = t.anexo && t.anexo.length > 0;
+                
+                return (
+                  <div
+                    key={t.id}
+                    className={`transaction-item ${t.type === 'Credit' ? 'transaction-item-credit' : 'transaction-item-debit'}`}
                   >
-                    {t.type === 'Credit' ? '+' : ''}
-                    {formatCurrency(t.value)}
-                  </span>
-                  {onEdit && (
-                    <button
-                      onClick={() => onEdit(t)}
-                      className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      title="Editar transação"
-                      type="button"
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center ${t.type === 'Credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
                     >
-                      <Edit2 size={18} />
-                    </button>
-                  )}
-                </div>
+                      {t.type === 'Credit' ? '↓' : '↑'}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-black">
+                          {t.type === 'Credit' ? 'Receita' : 'Despesa'}
+                          {hasAttachment && (
+                            <span className="ml-2 text-xs text-gray-500" title="Possui anexo">
+                              📎
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                      <p className="text-sm text-gray-500">{formatDate(t.date)}</p>
+                      {(t.from || t.to) && (
+                        <p className="text-xs text-gray-400 mt-1">
+                          {t.from && `De: ${t.from}`}
+                          {t.from && t.to && ' • '}
+                          {t.to && `Para: ${t.to}`}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`font-semibold ${t.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}
+                      >
+                        {t.type === 'Credit' ? '+' : ''}
+                        {formatCurrency(t.value)}
+                      </span>
+                      {onEdit && (
+                        <button
+                          onClick={() => onEdit(t)}
+                          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Editar transação"
+                          type="button"
+                        >
+                          <Edit2 size={18} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+            
+            {hasMore && (
+              <div ref={observerTarget} className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-[#47A138]"></div>
               </div>
-            );
-          })
+            )}
+          </div>
+        </div>
+
+        {filtered.length > 0 && (
+          <div className="border-t px-3 py-2 text-center text-sm text-gray-500 bg-gray-50">
+            Exibindo {displayedTransactions.length} de {filtered.length} transações
+          </div>
         )}
       </div>
-
-      {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-            className="px-4 py-2 border rounded-md disabled:opacity-50"
-            type="button"
-          >
-            Anterior
-          </button>
-          <span className="px-4 py-2">
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded-md disabled:opacity-50"
-            type="button"
-          >
-            Próximo
-          </button>
-        </div>
-      )}
     </div>
   );
 };
