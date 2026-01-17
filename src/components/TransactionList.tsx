@@ -2,6 +2,7 @@ import { Edit2 } from 'lucide-react';
 import type React from 'react';
 import { useMemo, useState } from 'react';
 import { useGetTransactions } from '../hooks/useGetTransactions';
+import { useAuth } from '../hooks/useAuth';
 
 interface Props {
   accountId: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
+  const { token } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ 
@@ -18,7 +20,7 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
     endDate: ''
   });
 
-  const { data, isFetching } = useGetTransactions({ accountId });
+  const { data, isFetching } = useGetTransactions({ accountId, token });
   const transactions = data?.result?.transactions || [];
 
   const filtered = useMemo(() => {
