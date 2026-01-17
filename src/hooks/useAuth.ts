@@ -1,9 +1,9 @@
-import useStore from '@bytebank/root/bytebank-store';
+import useStore from "@bytebank/root/bytebank-store";
 
 interface AuthState {
-  token: string | null;
-  accountId: string | null;
-  isAuthenticated: boolean;
+	token: string | null;
+	accountId: string | null;
+	isAuthenticated: boolean;
 }
 
 /**
@@ -11,15 +11,15 @@ interface AuthState {
  * compartilhada entre os microfrontends via module federation
  */
 export function useAuth(): AuthState {
-  const auth = useStore((state) => state.auth);
-  const account = useStore((state) => state.account);
+	const auth = useStore((state) => state.auth);
+	const account = useStore((state) => state.account);
 
-  // Obtém accountId do user ou do selectedAccount
-  const accountId = auth?.user?.id || account?.selectedAccount?.id || null;
+	// Obtém accountId do user ou do selectedAccount
+	const accountId = auth?.user?.id || account?.selectedAccount?.id || null;
 
-  return {
-    token: auth?.token || null,
-    accountId,
-    isAuthenticated: auth?.isAuthenticated || false,
-  };
+	return {
+		token: auth?.token || null,
+		accountId,
+		isAuthenticated: auth?.isAuthenticated || false,
+	};
 }
