@@ -2,6 +2,7 @@ import { CheckCircle, FileText, Loader2, Save, Upload, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ENV } from '../config/env';
 import { MAX_FILE_SIZE, ALLOWED_FILE_TYPES } from '../config/constants';
+import { useAuth } from '../hooks/useAuth';
 
 // Configurações de validação
 const ALLOWED_TYPES = ALLOWED_FILE_TYPES;
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export default function TransactionAdd({ accountId, onTransactionCreated, editTransaction, onCancelEdit }: Props) {
+  const { token } = useAuth();
   const [formData, setFormData] = useState({
     type: 'Debit' as 'Credit' | 'Debit',
     value: '',
@@ -121,7 +123,10 @@ export default function TransactionAdd({ accountId, onTransactionCreated, editTr
       }
 
       // 2. Criar ou atualizar transação
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicGFzc3dvcmQiOiJzdHJpbmciLCJpZCI6IjY5Njk5N2YwZjc0MjhkOTY3NTA0NTUyYyIsImlhdCI6MTc2ODUyNzg3MiwiZXhwIjoxNzY4NTcxMDcyfQ.90ueBmfq0FMsJc-o7dEvuNhvyUumIRxcseMvXTlvfO0';
+      if (!token) {
+        throw new Error('Token de autenticação não encontrado');
+      }
+
       const transactionData = {
         accountId,
         type: formData.type,

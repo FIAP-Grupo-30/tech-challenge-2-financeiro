@@ -24,12 +24,20 @@ export const responseSchema = z.object({
 
 export type Response = z.infer<typeof responseSchema>;
 
-async function fetcher(accountId: string) {
+async function fetcher(accountId: string, token: string | null) {
+  if (!token) {
+    throw new Error('Token de autenticação não encontrado');
+  }
+
   const response = await fetch(`${ENV.API_BASE_URL}/account/${accountId}/statement`, {
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0cmluZyIsImVtYWlsIjoic3RyaW5nIiwicGFzc3dvcmQiOiJzdHJpbmciLCJpZCI6IjY5Njk5N2YwZjc0MjhkOTY3NTA0NTUyYyIsImlhdCI6MTc2ODUyNzg3MiwiZXhwIjoxNzY4NTcxMDcyfQ.90ueBmfq0FMsJc-o7dEvuNhvyUumIRxcseMvXTlvfO0`,
+      Authorization: `Bearer ${token}`,
     },
   });
+
+  if (!response.ok) {
+    throw new Error('Erro ao buscar transações');
+  }
 
   const data = await response.json();
   return responseSchema.parse(data);
@@ -37,12 +45,13 @@ async function fetcher(accountId: string) {
 
 type Props = {
   accountId: string;
+  token: string | null;
 };
 
-export function useGetTransactions({ accountId }: Props) {
+export function useGetTransactions({ accountId, token }: Props) {
   return useQuery({
     queryKey: ['transactions', accountId],
-    queryFn: () => fetcher(accountId),
-    enabled: !!accountId,
+    queryFn: () => fetcher(accountId, token),
+    enabled: !!accountId && !!token,
   });
 }
