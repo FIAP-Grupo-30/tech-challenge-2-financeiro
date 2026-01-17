@@ -1,38 +1,51 @@
-import federation from '@originjs/vite-plugin-federation';
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import federation from "@originjs/vite-plugin-federation";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig, loadEnv } from "vite";
+import { z } from "zod";
 
-export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    federation({
-      name: '@bytebank/financeiro',
-      filename: 'remoteEntry.js',
-      exposes: {
-        './bytebank-financeiro': './src/exposes/bytebank-financeiro.tsx',
-      },
-      shared: ['react', 'react-dom', 'react-router-dom'],
-    }),
-  ],
-  build: {
-    modulePreload: false,
-    target: 'esnext',
-    minify: false,
-    cssCodeSplit: false,
-  },
-  server: {
-    port: 9002,
-    proxy: {
-      '/api': {
-        target: 'https://tech-challenge-2-production.up.railway.app',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
-  preview: {
-    port: 9002,
-  },
+const schema = z.object({
+	VITE_API_BASE_URL: z.url(),
+	VITE_REMOTE_ROOT_URL: z.url(),
+	VITE_REMOTE_FINANCEIRO_URL: z.url(),
+	VITE_REMOTE_DASHBOARD_URL: z.url(),
+	VITE_REMOTE_BASE_URL: z.url(),
+});
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => {
+	const ENV = schema.parse(loadEnv(mode, process.cwd(), ""));
+
+	return {
+		plugins: [
+			react(),
+			tailwindcss(),
+			federation({
+				name: "@bytebank/financeiro",
+				filename: "remoteEntry.js",
+				exposes: {
+					"./bytebank-financeiro": "./src/exposes/bytebank-financeiro.tsx",
+				},
+				remotes: {
+					"@bytebank/root": ENV.VITE_REMOTE_ROOT_URL,
+				},
+				shared: ["react", "react-dom", "react-router-dom"],
+			}),
+		],
+		build: {
+			modulePreload: false,
+			target: "esnext",
+			minify: false,
+			cssCodeSplit: false,
+		},
+		server: {
+			port: 9000,
+			fs: {
+				allow: ["."],
+			},
+		},
+		preview: {
+			port: 9002,
+		},
+	};
 });

@@ -60,16 +60,22 @@ export default Dashboard;
 
 Componente principal que renderiza gráficos, métricas e análises usando Recharts.
 
-## 🔄 Integração com Base
+## 🔄 Integração com Store Global
 
-O microfrontend dashboard pode acessar o Redux Store do base:
+O microfrontend financeiro pode acessar a store Zustand global via Module Federation:
 
 ```typescript
-// Acessar store global
-const store = (window as any).__BYTEBANK_STORE__;
+// Importar store via Module Federation
+import useStore from '@bytebank/root/bytebank-store';
 
-// Usar hooks do base (se disponível via Module Federation)
-import { useAccount, useTransactions } from '@bytebank/base';
+// Usar a store nos componentes
+const auth = useStore((state) => state.auth);
+const transactions = useStore((state) => state.transactions);
+const account = useStore((state) => state.account);
+
+// Ou usar o hook customizado useAuth
+import { useAuth } from './hooks/useAuth';
+const { token, accountId, isAuthenticated } = useAuth();
 ```
 
 ## 🎨 Estilos Globais
