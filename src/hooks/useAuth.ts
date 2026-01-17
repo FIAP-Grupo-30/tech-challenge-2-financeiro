@@ -14,8 +14,8 @@ export function useAuth(): AuthState {
 	const auth = useStore((state) => state.auth);
 	const account = useStore((state) => state.account);
 
-	// Obtém accountId do user ou do selectedAccount
-	const accountId = auth?.user?.id || account?.selectedAccount?.id || null;
+	// Obtém accountId do selectedAccount (não do user.id que é o ID do usuário)
+	const accountId = account?.selectedAccount?.id || null;
 
 	return {
 		token: auth?.token || null,

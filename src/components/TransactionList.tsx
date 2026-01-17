@@ -1,6 +1,7 @@
 import { Edit2 } from "lucide-react";
 import type React from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useGetTransactions } from "../hooks/useGetTransactions";
 import { useAuth } from "../hooks/useAuth";
 
@@ -11,6 +12,7 @@ interface Props {
 
 const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 	const { token } = useAuth();
+	const queryClient = useQueryClient();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [showFilters, setShowFilters] = useState(false);
 	const [filters, setFilters] = useState({
@@ -19,6 +21,20 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 		startDate: "",
 		endDate: "",
 	});
+
+	// Escuta eventos de transação criada para recarregar
+	useEffect(() => {
+		const handleTransactionCreated = () => {
+			// Invalida a query para forçar refetch
+			queryClient.invalidateQueries({ queryKey: ["transactions", accountId] });
+		};
+
+		window.addEventListener("mfe:transaction-created", handleTransactionCreated);
+		
+		return () => {
+			window.removeEventListener("mfe:transaction-created", handleTransactionCreated);
+		};
+	}, [accountId, queryClient]);
 
 	const { data, isFetching } = useGetTransactions({ accountId, token });
 	const transactions = data?.result?.transactions || [];
