@@ -1,53 +1,25 @@
-import { useEffect, useState } from 'react';
+import useStore from "@bytebank/root/bytebank-store";
 
 interface AuthState {
-  token: string | null;
-  accountId: string | null;
-  isAuthenticated: boolean;
+	token: string | null;
+	accountId: string | null;
+	isAuthenticated: boolean;
 }
 
 /**
- * Hook para acessar informações de autenticação do Redux store global
- * compartilhado entre os microfrontends
+ * Hook para acessar informações de autenticação da store Zustand global
+ * compartilhada entre os microfrontends via module federation
  */
 export function useAuth(): AuthState {
-  const [authState, setAuthState] = useState<AuthState>({
-    token: null,
-    accountId: null,
-    isAuthenticated: false,
-  });
+	const auth = useStore((state) => state.auth);
+	const account = useStore((state) => state.account);
 
-  useEffect(() => {
-    // Acessa a store global exposta pelo projeto base
-    const globalStore = (window as any).__BYTEBANK_STORE__;
-    
-    if (!globalStore) {
-      console.warn('Redux store global não encontrada');
-      return;
-    }
+	// Obtém accountId do user ou do selectedAccount
+	const accountId = auth?.user?.id || account?.selectedAccount?.id || null;
 
-    // Função para atualizar o estado local com base no store
-    const updateAuthState = () => {
-      const state = globalStore.getState();
-      const auth = state.auth;
-      
-      setAuthState({
-        token: auth?.token || null,
-        accountId: auth?.user?.id || null,
-        isAuthenticated: auth?.isAuthenticated || false,
-      });
-    };
-
-    // Atualiza imediatamente
-    updateAuthState();
-
-    // Inscreve para mudanças no store
-    const unsubscribe = globalStore.subscribe(updateAuthState);
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  return authState;
+	return {
+		token: auth?.token || null,
+		accountId,
+		isAuthenticated: auth?.isAuthenticated || false,
+	};
 }
