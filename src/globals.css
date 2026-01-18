@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" prefix(fin);
 
 /* ==========================================
    BYTEBANK DESIGN SYSTEM - FASE 2
@@ -18,43 +18,43 @@
 /* Botões ByteBank - Preservados da Fase 1 */
 @layer components {
   .btn-bytebank-primary {
-    @apply inline-flex justify-center items-center h-11 text-center rounded-lg bg-[#47A138] hover:bg-white min-w-[180px] text-base font-semibold text-white hover:text-[#47A138] transition duration-300 border-2 border-[#47A138] px-6;
+    @apply fin:inline-flex fin:justify-center fin:items-center fin:h-11 fin:text-center fin:rounded-lg fin:bg-[#47A138] fin:hover:bg-white fin:min-w-[180px] fin:text-base fin:font-semibold fin:text-white fin:hover:text-[#47A138] fin:transition fin:duration-300 fin:border-2 fin:border-[#47A138] fin:px-6;
   }
 
   .btn-bytebank-secondary {
-    @apply inline-flex justify-center items-center h-11 text-center rounded-lg bg-transparent hover:bg-[#47A138] border-[3px] border-[#47A138] min-w-[180px] text-[#47A138] hover:text-white text-base font-semibold transition duration-300 px-6;
+    @apply fin:inline-flex fin:justify-center fin:items-center fin:h-11 fin:text-center fin:rounded-lg fin:bg-transparent fin:hover:bg-[#47A138] fin:border-[3px] fin:border-[#47A138] fin:min-w-[180px] fin:text-[#47A138] fin:hover:text-white fin:text-base fin:font-semibold fin:transition fin:duration-300 fin:px-6;
   }
 
   .btn-bytebank-dark {
-    @apply inline-flex justify-center items-center h-14 text-center rounded-lg bg-black hover:bg-transparent border-[3px] border-black w-full font-semibold text-white text-lg hover:text-black transition duration-300;
+    @apply fin:inline-flex fin:justify-center fin:items-center fin:h-14 fin:text-center fin:rounded-lg fin:bg-black fin:hover:bg-transparent fin:border-[3px] fin:border-black fin:w-full fin:font-semibold fin:text-white fin:text-lg fin:hover:text-black fin:transition fin:duration-300;
   }
 
   .input-bytebank {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#47A138] focus:border-transparent;
+    @apply fin:w-full fin:px-3 fin:py-2 fin:border fin:border-gray-300 fin:rounded-md fin:focus:outline-none fin:focus:ring-2 fin:focus:ring-[#47A138] fin:focus:border-transparent;
   }
 
   .card-bytebank {
-    @apply bg-[#CCCCCC] p-7 rounded-xl;
+    @apply fin:bg-[#CCCCCC] fin:p-7 fin:rounded-xl;
   }
 
   .card-bytebank-white {
-    @apply bg-white p-4 rounded-lg shadow-sm;
+    @apply fin:bg-white fin:p-4 fin:rounded-lg fin:shadow-sm;
   }
 
   .menu-link {
-    @apply text-lg font-medium text-[#666666] hover:bg-[#e4e1e1] p-1.5 transition duration-200 rounded;
+    @apply fin:text-lg fin:font-medium fin:text-[#666666] fin:hover:bg-[#e4e1e1] fin:p-1.5 fin:transition fin:duration-200 fin:rounded;
   }
 
   .transaction-item {
-    @apply flex items-center gap-4 p-4 bg-white rounded-lg border-l-4 transition-all hover:shadow-md;
+    @apply fin:flex fin:items-center fin:gap-4 fin:p-4 fin:bg-white fin:rounded-lg fin:border-l-4 fin:transition-all fin:hover:shadow-md;
   }
 
   .transaction-item-credit {
-    @apply border-l-green-500;
+    @apply fin:border-l-green-500;
   }
 
   .transaction-item-debit {
-    @apply border-l-red-500;
+    @apply fin:border-l-red-500;
   }
 }
 
