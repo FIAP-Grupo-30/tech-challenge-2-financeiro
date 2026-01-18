@@ -164,12 +164,7 @@ export default function TransactionAdd({
 			});
 
 			if (response.ok) {
-				alert(
-					editTransaction
-						? "Transação atualizada com sucesso!"
-						: "Transação criada com sucesso!",
-				);
-
+				console.log('🎉 [TransactionAdd] CÓDIGO NOVO - Transação criada, SEM ALERT!');
 				// Limpa o formulário
 				setFormData({
 					type: "Debit",
@@ -178,11 +173,6 @@ export default function TransactionAdd({
 					to: "",
 				});
 				setFiles([]);
-
-				// Notifica o componente pai
-				if (onTransactionCreated) {
-					onTransactionCreated();
-				}
 
 				// Cancela modo de edição
 				if (onCancelEdit) {
@@ -195,6 +185,11 @@ export default function TransactionAdd({
 						detail: { timestamp: new Date() },
 					}),
 				);
+
+				// Notifica o componente pai (após dispatch do evento)
+				if (onTransactionCreated) {
+					onTransactionCreated();
+				}
 			} else {
 				const errorData = await response.json();
 				throw new Error(errorData.message || "Falha ao criar transação");
