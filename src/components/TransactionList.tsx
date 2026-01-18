@@ -75,20 +75,20 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 
 	if (isFetching) {
 		return (
-			<div className="flex items-center justify-center py-12">
-				<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#47A138]"></div>
+			<div className="fin:flex fin:items-center fin:justify-center fin:py-12">
+				<div className="fin:animate-spin fin:rounded-full fin:h-8 fin:w-8 fin:border-t-2 fin:border-b-2 fin:border-[#47A138]"></div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="bg-white rounded-xl p-6 shadow-sm">
-				<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-					<h2 className="text-2xl font-medium text-black">Transações</h2>
+		<div className="fin:space-y-6">
+			<div className="fin:bg-white fin:rounded-xl fin:p-6 fin:shadow-sm">
+				<div className="fin:flex fin:flex-col fin:md:flex-row fin:md:items-center fin:md:justify-between fin:gap-4">
+					<h2 className="fin:text-2xl fin:font-medium fin:text-black">Transações</h2>
 					<button
 						onClick={() => setShowFilters(!showFilters)}
-						className={`px-4 py-2 rounded-md border ${showFilters ? "bg-[#47A138] text-white" : "border-gray-300"}`}
+						className={`fin:px-4 fin:py-2 fin:rounded-md fin:border ${showFilters ? "fin:bg-[#47A138] fin:text-white" : "fin:border-gray-300"}`}
 						type="button"
 					>
 						Filtros
@@ -96,17 +96,17 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 				</div>
 
 				{showFilters && (
-					<div className="mt-6 pt-6 border-t grid md:grid-cols-2 gap-4">
+					<div className="fin:mt-6 fin:pt-6 fin:border-t fin:grid fin:md:grid-cols-2 fin:gap-4">
 						<select
 							value={filters.type}
 							onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-							className="px-3 py-2 border border-gray-300 rounded-md"
+							className="fin:px-3 fin:py-2 fin:border fin:border-gray-300 fin:rounded-md"
 						>
 							<option value="all">Todos os tipos</option>
 							<option value="Credit">Receitas</option>
 							<option value="Debit">Despesas</option>
 						</select>
-						<div className="flex gap-2">
+						<div className="fin:flex fin:gap-2">
 							<input
 								type="date"
 								value={filters.startDate}
@@ -114,7 +114,7 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 									setFilters({ ...filters, startDate: e.target.value })
 								}
 								placeholder="Data inicial"
-								className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+								className="fin:flex-1 fin:px-3 fin:py-2 fin:border fin:border-gray-300 fin:rounded-md"
 							/>
 							<input
 								type="date"
@@ -123,7 +123,7 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 									setFilters({ ...filters, endDate: e.target.value })
 								}
 								placeholder="Data final"
-								className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+								className="fin:flex-1 fin:px-3 fin:py-2 fin:border fin:border-gray-300 fin:rounded-md"
 							/>
 						</div>
 						<button
@@ -135,7 +135,7 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 									endDate: "",
 								})
 							}
-							className="text-[#47A138] md:col-span-2"
+							className="fin:text-[#47A138] fin:md:col-span-2"
 							type="button"
 						>
 							Limpar Filtros
@@ -144,9 +144,9 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 				)}
 			</div>
 
-			<div className="space-y-3">
+			<div className="fin:space-y-3">
 				{paged.length === 0 ? (
-					<div className="bg-white rounded-xl p-8 text-center text-gray-500">
+					<div className="fin:bg-white fin:rounded-xl fin:p-8 fin:text-center fin:text-gray-500">
 						Nenhuma transação
 					</div>
 				) : (
@@ -159,17 +159,17 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 								className={`transaction-item ${t.type === "Credit" ? "transaction-item-credit" : "transaction-item-debit"}`}
 							>
 								<div
-									className={`w-10 h-10 rounded-full flex items-center justify-center ${t.type === "Credit" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}
+									className={`fin:w-10 fin:h-10 fin:rounded-full fin:flex fin:items-center fin:justify-center ${t.type === "Credit" ? "fin:bg-green-100 fin:text-green-600" : "fin:bg-red-100 fin:text-red-600"}`}
 								>
 									{t.type === "Credit" ? "↓" : "↑"}
 								</div>
-								<div className="flex-1">
-									<div className="flex items-center gap-2">
-										<p className="font-medium text-black">
+								<div className="fin:flex-1">
+									<div className="fin:flex fin:items-center fin:gap-2">
+										<p className="fin:font-medium fin:text-black">
 											{t.type === "Credit" ? "Receita" : "Despesa"}
 											{hasAttachment && (
 												<span
-													className="ml-2 text-xs text-gray-500"
+													className="fin:ml-2 fin:text-xs fin:text-gray-500"
 													title="Possui anexo"
 												>
 													📎
@@ -177,18 +177,18 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 											)}
 										</p>
 									</div>
-									<p className="text-sm text-gray-500">{formatDate(t.date)}</p>
+									<p className="fin:text-sm fin:text-gray-500">{formatDate(t.date)}</p>
 									{(t.from || t.to) && (
-										<p className="text-xs text-gray-400 mt-1">
+										<p className="fin:text-xs fin:text-gray-400 fin:mt-1">
 											{t.from && `De: ${t.from}`}
 											{t.from && t.to && " • "}
 											{t.to && `Para: ${t.to}`}
 										</p>
 									)}
 								</div>
-								<div className="flex items-center gap-3">
+								<div className="fin:flex fin:items-center fin:gap-3">
 									<span
-										className={`font-semibold ${t.type === "Credit" ? "text-green-600" : "text-red-600"}`}
+										className={`fin:font-semibold ${t.type === "Credit" ? "fin:text-green-600" : "fin:text-red-600"}`}
 									>
 										{t.type === "Credit" ? "+" : ""}
 										{formatCurrency(t.value)}
@@ -196,7 +196,7 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 									{onEdit && (
 										<button
 											onClick={() => onEdit(t)}
-											className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+											className="fin:p-2 fin:text-gray-400 fin:hover:fin:text-blue-600 fin:hover:fin:bg-blue-50 fin:rounded-lg fin:transition-colors"
 											title="Editar transação"
 											type="button"
 										>
@@ -211,22 +211,22 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 			</div>
 
 			{totalPages > 1 && (
-				<div className="flex justify-center gap-2">
+				<div className="fin:flex fin:justify-center fin:gap-2">
 					<button
 						onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
 						disabled={currentPage === 1}
-						className="px-4 py-2 border rounded-md disabled:opacity-50"
+						className="fin:px-4 fin:py-2 fin:border fin:rounded-md fin:disabled:fin:opacity-50"
 						type="button"
 					>
 						Anterior
 					</button>
-					<span className="px-4 py-2">
+					<span className="fin:px-4 fin:py-2">
 						{currentPage} / {totalPages}
 					</span>
 					<button
 						onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
 						disabled={currentPage === totalPages}
-						className="px-4 py-2 border rounded-md disabled:opacity-50"
+						className="fin:px-4 fin:py-2 fin:border fin:rounded-md fin:disabled:fin:opacity-50"
 						type="button"
 					>
 						Próximo

@@ -104,6 +104,71 @@ const { token, accountId, isAuthenticated } = useAuth();
 }
 ```
 
+### Uso de Prefixos Tailwind CSS
+
+⚠️ **IMPORTANTE**: Este projeto utiliza o prefixo `fin:` para todas as classes Tailwind CSS para evitar conflitos com outros microfrontends.
+
+#### Configuração
+
+O prefixo é configurado no arquivo `src/globals.css`:
+
+```css
+@import "tailwindcss" prefix(fin);
+```
+
+#### Como Usar Classes Tailwind
+
+Todas as classes Tailwind usadas diretamente no JSX devem incluir o prefixo `fin:`:
+
+```tsx
+// ✅ CORRETO - Com prefixo
+<div className="fin:flex fin:items-center fin:justify-center">
+  <p className="fin:text-2xl fin:font-bold fin:text-white">Conteúdo</p>
+</div>
+
+// ❌ ERRADO - Sem prefixo (pode causar conflitos)
+<div className="flex items-center justify-center">
+  <p className="text-2xl font-bold text-white">Conteúdo</p>
+</div>
+```
+
+#### Variantes e Responsividade
+
+Para variantes como `hover:`, `focus:`, e breakpoints responsivos (`md:`, `lg:`, etc.), use o formato `[prefixo]:[variante]:[classe]`:
+
+```tsx
+// Hover
+<button className="fin:bg-green-500 fin:hover:bg-green-600">
+
+// Responsividade
+<div className="fin:flex fin:flex-col fin:md:flex-row">
+
+// Classes arbitrárias
+<div className="fin:bg-[#47A138] fin:w-[170px]">
+```
+
+#### No @apply (globals.css)
+
+Quando usar `@apply` dentro de `@layer components`, use o formato `[prefixo]:[variante]:[classe]`:
+
+```css
+@layer components {
+  .minha-classe {
+    @apply fin:bg-white fin:hover:bg-gray-100 fin:md:flex;
+  }
+}
+```
+
+#### Classes Customizadas (NÃO precisam de prefixo)
+
+Classes customizadas definidas em `@layer components` (como `.btn-bytebank-primary`, `.transaction-item`) **NÃO** precisam de prefixo, pois já são nomes únicos:
+
+```tsx
+// ✅ CORRETO - Classe customizada sem prefixo
+<button className="btn-bytebank-primary">Clique aqui</button>
+<div className="transaction-item transaction-item-credit">Transação</div>
+```
+
 ## 🛠️ Comandos
 
 ### Desenvolvimento

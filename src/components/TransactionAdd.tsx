@@ -205,31 +205,31 @@ export default function TransactionAdd({
 	};
 
 	return (
-		<div className="w-full p-6 bg-white rounded-2xl shadow-md border border-gray-100">
-			<h3 className="text-xl font-bold mb-1 text-gray-800 flex items-center gap-2">
-				<FileText className="text-green-500" size={24} />
+		<div className="fin:w-full fin:p-6 fin:bg-white fin:rounded-2xl fin:shadow-md fin:border fin:border-gray-100">
+			<h3 className="fin:text-xl fin:font-bold fin:mb-1 fin:text-gray-800 fin:flex fin:items-center fin:gap-2">
+				<FileText className="fin:text-green-500" size={24} />
 				{editTransaction ? "Editar Transação" : "Nova Transação"}
 			</h3>
-			<p className="text-sm text-gray-500 mb-6">
+			<p className="fin:text-sm fin:text-gray-500 fin:mb-6">
 				{editTransaction
 					? "Edite os dados da transação."
 					: "Adicione uma nova transação com anexos."}
 			</p>
 
-			<form onSubmit={handleSubmit} className="space-y-4">
+			<form onSubmit={handleSubmit} className="fin:space-y-4">
 				{/* Tipo de Transação */}
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="fin:block fin:text-sm fin:font-medium fin:text-gray-700 fin:mb-2">
 						Tipo de Transação *
 					</label>
-					<div className="flex gap-3">
+					<div className="fin:flex fin:gap-3">
 						<button
 							type="button"
 							onClick={() => handleInputChange("type", "Credit")}
-							className={`flex-1 py-3 px-4 rounded-lg border-2 font-medium transition-all ${
+							className={`fin:flex-1 fin:py-3 fin:px-4 fin:rounded-lg fin:border-2 fin:font-medium fin:transition-all ${
 								formData.type === "Credit"
-									? "border-green-500 bg-green-50 text-green-700"
-									: "border-gray-200 hover:border-gray-300"
+									? "fin:border-green-500 fin:bg-green-50 fin:text-green-700"
+									: "fin:border-gray-200 fin:hover:fin:border-gray-300"
 							}`}
 						>
 							💰 Receita
@@ -237,10 +237,10 @@ export default function TransactionAdd({
 						<button
 							type="button"
 							onClick={() => handleInputChange("type", "Debit")}
-							className={`flex-1 py-3 px-4 rounded-lg border-2 font-medium transition-all ${
+							className={`fin:flex-1 fin:py-3 fin:px-4 fin:rounded-lg fin:border-2 fin:font-medium fin:transition-all ${
 								formData.type === "Debit"
-									? "border-red-500 bg-red-50 text-red-700"
-									: "border-gray-200 hover:border-gray-300"
+									? "fin:border-red-500 fin:bg-red-50 fin:text-red-700"
+									: "fin:border-gray-200 fin:hover:fin:border-gray-300"
 							}`}
 						>
 							💸 Despesa
@@ -250,7 +250,7 @@ export default function TransactionAdd({
 
 				{/* Valor */}
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="fin:block fin:text-sm fin:font-medium fin:text-gray-700 fin:mb-2">
 						Valor *
 					</label>
 					<input
@@ -260,21 +260,21 @@ export default function TransactionAdd({
 						value={formData.value}
 						onChange={(e) => handleInputChange("value", e.target.value)}
 						placeholder="0.00"
-						className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+						className={`fin:w-full fin:px-4 fin:py-2 fin:border fin:rounded-lg fin:focus:fin:outline-none fin:focus:fin:ring-2 ${
 							errors.value
-								? "border-red-300 focus:ring-red-500"
-								: "border-gray-300 focus:ring-green-500"
+								? "fin:border-red-300 fin:focus:fin:ring-red-500"
+								: "fin:border-gray-300 fin:focus:fin:ring-green-500"
 						}`}
 					/>
 					{errors.value && (
-						<p className="mt-1 text-sm text-red-600">{errors.value}</p>
+						<p className="fin:mt-1 fin:text-sm fin:text-red-600">{errors.value}</p>
 					)}
 				</div>
 
 				{/* Campos opcionais: De/Para */}
-				<div className="grid grid-cols-2 gap-4">
+				<div className="fin:grid fin:grid-cols-2 fin:gap-4">
 					<div>
-						<label className="block text-sm font-medium text-gray-700 mb-2">
+						<label className="fin:block fin:text-sm fin:font-medium fin:text-gray-700 fin:mb-2">
 							De (opcional)
 						</label>
 						<input
@@ -282,11 +282,11 @@ export default function TransactionAdd({
 							value={formData.from}
 							onChange={(e) => handleInputChange("from", e.target.value)}
 							placeholder="Origem"
-							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+							className="fin:w-full fin:px-4 fin:py-2 fin:border fin:border-gray-300 fin:rounded-lg fin:focus:fin:outline-none fin:focus:fin:ring-2 fin:focus:fin:ring-green-500"
 						/>
 					</div>
 					<div>
-						<label className="block text-sm font-medium text-gray-700 mb-2">
+						<label className="fin:block fin:text-sm fin:font-medium fin:text-gray-700 fin:mb-2">
 							Para (opcional)
 						</label>
 						<input
@@ -294,14 +294,14 @@ export default function TransactionAdd({
 							value={formData.to}
 							onChange={(e) => handleInputChange("to", e.target.value)}
 							placeholder="Destino"
-							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+							className="fin:w-full fin:px-4 fin:py-2 fin:border fin:border-gray-300 fin:rounded-lg fin:focus:fin:outline-none fin:focus:fin:ring-2 fin:focus:fin:ring-green-500"
 						/>
 					</div>
 				</div>
 
 				{/* Área de Upload de Arquivos */}
 				<div>
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="fin:block fin:text-sm fin:font-medium fin:text-gray-700 fin:mb-2">
 						Anexar Recibos/Documentos (opcional)
 					</label>
 					<div
@@ -317,8 +317,8 @@ export default function TransactionAdd({
 						}}
 						onClick={() => fileInputRef.current?.click()}
 						className={`
-              relative border-2 border-dashed rounded-xl p-6 transition-all cursor-pointer text-center
-              ${isDragging ? "border-green-500 bg-green-50" : "border-gray-200 hover:border-green-300 hover:bg-gray-50"}
+              fin:relative fin:border-2 fin:border-dashed fin:rounded-xl fin:p-6 fin:transition-all fin:cursor-pointer fin:text-center
+              ${isDragging ? "fin:border-green-500 fin:bg-green-50" : "fin:border-gray-200 fin:hover:fin:border-green-300 fin:hover:fin:bg-gray-50"}
             `}
 					>
 						<input
@@ -330,17 +330,17 @@ export default function TransactionAdd({
 							accept={ALLOWED_TYPES.join(",")}
 						/>
 
-						<div className="flex flex-col items-center">
-							<div className="p-3 bg-green-100 rounded-full mb-2">
-								<Upload className="text-green-600" size={24} />
+						<div className="fin:flex fin:flex-col fin:items-center">
+							<div className="fin:p-3 fin:bg-green-100 fin:rounded-full fin:mb-2">
+								<Upload className="fin:text-green-600" size={24} />
 							</div>
-							<p className="text-sm font-medium text-gray-700">
+							<p className="fin:text-sm fin:font-medium fin:text-gray-700">
 								Arraste arquivos ou{" "}
-								<span className="text-green-600 underline">
+								<span className="fin:text-green-600 fin:underline">
 									clique para subir
 								</span>
 							</p>
-							<p className="text-xs text-gray-400 mt-1">
+							<p className="fin:text-xs fin:text-gray-400 fin:mt-1">
 								PDF, PNG ou JPG (Máx. 5MB por arquivo)
 							</p>
 						</div>
@@ -348,26 +348,26 @@ export default function TransactionAdd({
 
 					{/* Lista de Arquivos */}
 					{files.length > 0 && (
-						<div className="mt-4 space-y-2">
-							<p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+						<div className="fin:mt-4 fin:space-y-2">
+							<p className="fin:text-xs fin:font-semibold fin:text-gray-400 fin:uppercase fin:tracking-wider">
 								Arquivos selecionados ({files.length})
 							</p>
-							<ul className="max-h-32 overflow-y-auto space-y-2">
+							<ul className="fin:max-h-32 fin:overflow-y-auto fin:space-y-2">
 								{files.map((file, index) => (
 									<li
 										key={`${file.name}-${index}`}
-										className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+										className="fin:flex fin:items-center fin:justify-between fin:p-2 fin:bg-gray-50 fin:rounded-lg"
 									>
-										<div className="flex items-center gap-2 truncate">
+										<div className="fin:flex fin:items-center fin:gap-2 fin:truncate">
 											<CheckCircle
 												size={16}
-												className="text-green-500 shrink-0"
+												className="fin:text-green-500 fin:shrink-0"
 											/>
-											<div className="flex flex-col truncate">
-												<span className="text-sm font-medium text-gray-700 truncate">
+											<div className="fin:flex fin:flex-col fin:truncate">
+												<span className="fin:text-sm fin:font-medium fin:text-gray-700 fin:truncate">
 													{file.name}
 												</span>
-												<span className="text-xs text-gray-400">
+												<span className="fin:text-xs fin:text-gray-400">
 													{(file.size / 1024).toFixed(0)} KB
 												</span>
 											</div>
@@ -378,7 +378,7 @@ export default function TransactionAdd({
 												e.stopPropagation();
 												removeFile(index);
 											}}
-											className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+											className="fin:p-1 fin:text-gray-400 fin:hover:fin:text-red-500 fin:hover:fin:bg-red-50 fin:rounded-md fin:transition-colors"
 										>
 											<X size={16} />
 										</button>
@@ -390,7 +390,7 @@ export default function TransactionAdd({
 				</div>
 
 				{/* Botões de Envio */}
-				<div className="flex gap-3">
+				<div className="fin:flex fin:gap-3">
 					{editTransaction && (
 						<button
 							type="button"
@@ -404,7 +404,7 @@ export default function TransactionAdd({
 								setFiles([]);
 								if (onCancelEdit) onCancelEdit();
 							}}
-							className="flex-1 py-3 rounded-xl font-semibold border-2 border-gray-300 hover:border-gray-400 transition-all"
+							className="fin:flex-1 fin:py-3 fin:rounded-xl fin:font-semibold fin:border-2 fin:border-gray-300 fin:hover:fin:border-gray-400 fin:transition-all"
 						>
 							Cancelar
 						</button>
@@ -413,13 +413,13 @@ export default function TransactionAdd({
 						type="submit"
 						disabled={isSubmitting}
 						className={`
-              ${editTransaction ? "flex-1" : "w-full"} py-3 rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2
-              ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700 active:scale-[0.98] shadow-md"}
+              ${editTransaction ? "fin:flex-1" : "fin:w-full"} fin:py-3 fin:rounded-xl fin:font-semibold fin:text-white fin:transition-all fin:flex fin:items-center fin:justify-center fin:gap-2
+              ${isSubmitting ? "fin:bg-gray-400 fin:cursor-not-allowed" : "fin:bg-green-600 fin:hover:fin:bg-green-700 fin:active:fin:scale-[0.98] fin:shadow-md"}
             `}
 					>
 						{isSubmitting ? (
 							<>
-								<Loader2 size={20} className="animate-spin" />
+								<Loader2 size={20} className="fin:animate-spin" />
 								Salvando...
 							</>
 						) : (
