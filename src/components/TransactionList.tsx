@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetTransactions } from "../hooks/useGetTransactions";
 import { useAuth } from "../hooks/useAuth";
+import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 
 interface Props {
 	accountId: string;
@@ -13,7 +14,7 @@ interface Props {
 const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 	const { token } = useAuth();
 	const queryClient = useQueryClient();
-	const [currentPage, setCurrentPage] = useState(1);
+	const [displayedCount, setDisplayedCount] = useState(10);
 	const [showFilters, setShowFilters] = useState(false);
 	const [filters, setFilters] = useState({
 		type: "all",
@@ -63,8 +64,17 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 		});
 	}, [transactions, filters]);
 
-	const paged = filtered.slice((currentPage - 1) * 10, currentPage * 10);
-	const totalPages = Math.ceil(filtered.length / 10);
+	const paged = filtered.slice(0, displayedCount);
+	const hasMore = displayedCount < filtered.length;
+
+	const observerTarget = useInfiniteScroll({
+		onLoadMore: () => {
+			setDisplayedCount((prev) => prev + 10);
+		},
+		isLoading: isFetching,
+		hasMore,
+		threshold: 0.1,
+	});
 
 	const formatCurrency = (v: number) =>
 		new Intl.NumberFormat("pt-BR", {
@@ -144,7 +154,7 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 				)}
 			</div>
 
-			<div className="fin:space-y-3">
+			<div className="fin:space-y-3 fin:max-h-[600px] fin:overflow-y-auto">
 				{paged.length === 0 ? (
 					<div className="fin:bg-white fin:rounded-xl fin:p-8 fin:text-center fin:text-gray-500">
 						Nenhuma transação
@@ -210,27 +220,16 @@ const TransactionList: React.FC<Props> = ({ accountId, onEdit }) => {
 				)}
 			</div>
 
-			{totalPages > 1 && (
-				<div className="fin:flex fin:justify-center fin:gap-2">
-					<button
-						onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-						disabled={currentPage === 1}
-						className="fin:px-4 fin:py-2 fin:border fin:rounded-md fin:disabled:fin:opacity-50"
-						type="button"
-					>
-						Anterior
-					</button>
-					<span className="fin:px-4 fin:py-2">
-						{currentPage} / {totalPages}
-					</span>
-					<button
-						onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-						disabled={currentPage === totalPages}
-						className="fin:px-4 fin:py-2 fin:border fin:rounded-md fin:disabled:fin:opacity-50"
-						type="button"
-					>
-						Próximo
-					</button>
+			{hasMore && (
+				<div
+					ref={observerTarget}
+					className="fin:py-6 fin:text-center"
+				>
+					{isFetching && (
+						<div className="fin:flex fin:justify-center">
+							<div className="fin:animate-spin fin:rounded-full fin:h-6 fin:w-6 fin:border-t-2 fin:border-b-2 fin:border-[#47A138]"></div>
+						</div>
+					)}
 				</div>
 			)}
 		</div>
